@@ -22,6 +22,7 @@ body {
   color: #b9c5d0;            /* neutral-graublau statt reinweiß */
   min-height: 100vh;
   overflow-x: hidden;
+  user-select: none;
 }
 
 /* Header */
