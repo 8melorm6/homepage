@@ -1,78 +1,215 @@
+/* Farbvariablen */
+:root {
+  --bg-dark: #0f0f0f;
+  --bg-light: #f5f5f5;
+  --accent: #00c9ff;
+  --accent2: #92fe9d;
+  --text-dark: #e6e6e6;
+  --text-light: #1c1c1c;
+  --blur: 15px;
+}
+
+/* Reset */
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  color: #222;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #141e30, #243b55);
+  color: var(--text-dark);
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-header {
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  padding: 1em 0;
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2em 3em;
+  backdrop-filter: blur(var(--blur));
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 100;
 }
 
-nav ul {
+.logo {
+  font-size: 1.6rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--accent);
+}
+
+.logo span {
+  color: var(--accent2);
+}
+
+.nav ul {
   list-style: none;
-  padding: 0;
-  margin: 0;
+  display: flex;
+  gap: 2em;
 }
 
-nav li {
-  display: inline-block;
-  margin: 0 1em;
-}
-
-nav a {
-  color: white;
+.nav a {
+  color: #fff;
   text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
 }
 
-nav a:hover {
-  text-decoration: underline;
+.nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--accent2);
+  transition: width 0.3s ease;
 }
 
-main {
-  padding: 2em;
+.nav a:hover {
+  color: var(--accent2);
 }
 
-form {
+.nav a:hover::after {
+  width: 100%;
+}
+
+/* Hero */
+.hero {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: radial-gradient(circle at top, rgba(0, 201, 255, 0.2), transparent 70%);
+}
+
+.hero-content {
+  animation: fadeIn 1.5s ease;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  margin-top: 1em;
+  font-size: 1.2rem;
+  opacity: 0.85;
+}
+
+.cta {
+  margin-top: 2em;
+  padding: 0.8em 1.8em;
+  background: linear-gradient(45deg, var(--accent), var(--accent2));
+  border: none;
+  border-radius: 50px;
+  color: #111;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(0, 201, 255, 0.6);
+}
+
+/* Section */
+.section {
+  padding: 8em 2em;
+  max-width: 900px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(var(--blur));
+  border-radius: 15px;
+  padding: 3em;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Formular */
+.form {
   display: flex;
   flex-direction: column;
-  max-width: 400px;
-  margin: 0 auto;
+  gap: 1em;
+  max-width: 500px;
+  margin: 2em auto;
 }
 
 label {
-  margin-top: 10px;
+  font-weight: bold;
 }
 
 input, textarea {
-  padding: 8px;
-  font-size: 1em;
-}
-
-button {
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #333;
-  color: white;
+  padding: 0.8em;
+  border-radius: 8px;
   border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-dark);
+  outline: none;
+  transition: background 0.3s;
+}
+
+input:focus, textarea:focus {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border: none;
+  border-radius: 50px;
+  padding: 0.8em;
+  font-weight: bold;
+  color: #111;
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-button:hover {
-  background-color: #555;
+.btn:hover {
+  transform: scale(1.05);
 }
 
+/* Footer */
 footer {
   text-align: center;
-  background-color: #333;
-  color: white;
-  padding: 1em;
-  margin-top: 2em;
+  padding: 2em;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 0.9em;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsiv */
+@media (max-width: 768px) {
+  .nav ul {
+    flex-direction: column;
+    gap: 1em;
+  }
+  .header {
+    flex-direction: column;
+  }
+  .hero h1 {
+    font-size: 2.2rem;
+  }
 }

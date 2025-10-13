@@ -8,9 +8,9 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1>Meine Homepage</h1>
-    <nav>
+  <header class="header">
+    <div class="logo">M<span>H</span></div>
+    <nav class="nav">
       <ul>
         <li><a href="#start">Start</a></li>
         <li><a href="#ueber">Über mich</a></li>
@@ -20,19 +20,22 @@
   </header>
 
   <main>
-    <section id="start">
-      <h2>Willkommen</h2>
-      <p>Dies ist meine persönliche Homepage.</p>
+    <section id="start" class="hero">
+      <div class="hero-content">
+        <h1>Willkommen auf meiner Homepage</h1>
+        <p>Modernes Design. Klare Struktur. Maximale Präzision.</p>
+        <button class="cta">Mehr erfahren</button>
+      </div>
     </section>
 
-    <section id="ueber">
+    <section id="ueber" class="section glass">
       <h2>Über mich</h2>
-      <p>Hier steht ein kurzer Text über dich, z. B. Ausbildung, Projekte oder Interessen.</p>
+      <p>Ich bin ein detailorientierter Entwickler mit Leidenschaft für sauberen Code, Design und Effizienz. Diese Seite demonstriert moderne Webtechniken mit HTML, CSS und JavaScript.</p>
     </section>
 
-    <section id="kontakt">
+    <section id="kontakt" class="section">
       <h2>Kontakt</h2>
-      <form id="kontaktForm">
+      <form id="kontaktForm" class="form">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required>
 
@@ -42,14 +45,14 @@
         <label for="nachricht">Nachricht:</label>
         <textarea id="nachricht" name="nachricht" rows="5" required></textarea>
 
-        <button type="submit">Absenden</button>
+        <button type="submit" class="btn">Absenden</button>
       </form>
       <p id="meldung"></p>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 Mein Name – Alle Rechte vorbehalten</p>
+    <p>&copy; 2025 Michael – Alle Rechte vorbehalten</p>
   </footer>
 </body>
 </html>
