@@ -51,6 +51,26 @@ body {
   z-index: 100;
 }
 
+.header-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 0.3em;
+  font-size: 0.95em;
+  color: #b9c5d0;
+}
+
+#datetime {
+  font-weight: 500;
+  color: var(--accent2);
+}
+
+#weather {
+  font-size: 0.9em;
+  color: #a8b3be;
+}
+
 .logo {
   font-size: 2rem;
   font-weight: 700;

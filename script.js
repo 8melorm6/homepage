@@ -132,4 +132,49 @@ document.addEventListener("DOMContentLoaded", () => {
       cards.forEach(card => card.classList.remove("hint"));
     }, 6000);
   }
+
+  // --- Datum und Uhrzeit ---
+  const datetimeEl = document.getElementById("datetime");
+  function updateDateTime() {
+    const now = new Date();
+    const options = { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" };
+    datetimeEl.textContent = now.toLocaleString("de-DE", options);
+  }
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
+
+  // --- Wetteranzeige ---
+  const weatherEl = document.getElementById("weather");
+  const apiKey = "4e0b983a4bbe2545d6ed08b59967c6e3";
+
+  function fetchWeather(lat, lon) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=de`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data.weather && data.main) {
+          const temp = Math.round(data.main.temp);
+          const desc = data.weather[0].description;
+          const icon = data.weather[0].icon;
+          const city = data.name;
+          weatherEl.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}.png" alt="" style="vertical-align:middle;width:22px;height:22px;"> ${city}: ${temp}°C, ${desc}`;
+        } else {
+          weatherEl.textContent = "Wetterdaten nicht verfügbar";
+        }
+      })
+      .catch(() => {
+        weatherEl.textContent = "Keine Verbindung zur API";
+      });
+  }
+
+  // Standort ermitteln
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => fetchWeather(pos.coords.latitude, pos.coords.longitude),
+      () => { weatherEl.textContent = "Standortzugriff verweigert"; }
+    );
+  } else {
+    weatherEl.textContent = "Geolocation nicht unterstützt";
+  }
+
 });
