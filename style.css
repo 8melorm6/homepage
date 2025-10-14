@@ -83,6 +83,8 @@ body {
 
 .card {
   position: absolute;
+  user-select: none;
+  touch-action: none; /* verhindert Scrollen beim Ziehen */
   display: flex;
   flex-direction: column;
   justify-content: center; /* vertikal zentriert */
