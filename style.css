@@ -71,24 +71,73 @@ body {
   color: #a8b3be;
 }
 
+/* Logo mit Partikel-Glow */
 .logo {
+  position: relative;
+  display: inline-block;
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: 2px;
-  color: #b6cfe0;                  /* Basisfarbe: weiches, neutralblau */
+  color: #b6cfe0;                     /* Basisfarbe: weiches, neutralblau */
   text-shadow: 0 0 10px rgba(0, 201, 255, 0.25);
+  cursor: default;
+  transition: transform 0.3s ease, text-shadow 0.3s ease;
 }
 
-/* nur das große L */
+/* Glow-Hintergrund (Hologramm-Effekt) */
+.logo::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center,
+              rgba(86,176,255,0.35),
+              rgba(119,227,178,0.25),
+              transparent 70%);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+}
+
+.logo:hover {
+  text-shadow:
+    0 0 12px rgba(86,176,255,0.6),
+    0 0 22px rgba(119,227,178,0.4);
+  transform: scale(1.03);
+}
+
+.logo:hover::before {
+  opacity: 1;
+  transform: scale(1.2);
+  animation: holoPulse 1.8s ease-in-out infinite;
+}
+
+/* Pulsierender Hologramm-Effekt */
+@keyframes holoPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1.15); }
+  50% { opacity: 0.8; transform: scale(1.35); }
+}
+
+/* Buchstabenfarben */
 .logo .l {
-  color: #56b0ff;                  /* helles, freundliches Blau */
-  text-shadow: 0 0 10px rgba(0, 150, 255, 0.3);
+  color: #56b0ff;                     /* helles, freundliches Blau */
+  text-shadow: 0 0 12px rgba(86,176,255,0.5);
+  transition: text-shadow 0.3s ease;
 }
 
-/* nur das große R */
 .logo .r {
-  color: #77e3b2;                  /* dezentes Mintgrün */
-  text-shadow: 0 0 10px rgba(119, 227, 178, 0.25);
+  color: #77e3b2;                     /* dezentes Mintgrün */
+  text-shadow: 0 0 12px rgba(119,227,178,0.5);
+  transition: text-shadow 0.3s ease;
+}
+
+.logo:hover .l {
+  text-shadow: 0 0 20px rgba(86,176,255,0.8);
+}
+
+.logo:hover .r {
+  text-shadow: 0 0 20px rgba(119,227,178,0.8);
 }
 
 /* Cards */

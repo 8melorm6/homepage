@@ -196,4 +196,61 @@ document.addEventListener("DOMContentLoaded", () => {
     weatherEl.textContent = "Geolocation nicht unterstützt";
   }
 
+  // --- Dynamisches Partikel-Logo (Farbübergang zwischen L- und R-Farbe) ---
+  if (typeof THREE !== "undefined") {
+    const logoEl = document.querySelector(".logo");
+    if (logoEl) {
+      const container = document.createElement("div");
+      container.style.position = "absolute";
+      container.style.top = "-15px";
+      container.style.left = "0";
+      container.style.width = "100%";
+      container.style.height = "80px";
+      container.style.pointerEvents = "none";
+      logoEl.appendChild(container);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ alpha: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      container.appendChild(renderer.domElement);
+
+      const geometry = new THREE.BufferGeometry();
+      const count = 250;
+      const positions = new Float32Array(count * 3);
+      for (let i = 0; i < count * 3; i++) positions[i] = (Math.random() - 0.5) * 3;
+      geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+      // Ausgangsfarben (RGB-Werte)
+      const colorStart = new THREE.Color("#56b0ff");
+      const colorEnd = new THREE.Color("#77e3b2");
+      const material = new THREE.PointsMaterial({ color: colorStart.clone(), size: 0.05 });
+
+      const points = new THREE.Points(geometry, material);
+      scene.add(points);
+      camera.position.z = 2.5;
+
+      let hover = false;
+      let t = 0;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        points.rotation.y += hover ? 0.02 : 0.005;
+        points.rotation.x += hover ? 0.015 : 0.002;
+
+        // sanfter Farbverlauf zwischen Blau und Grün
+        t += 0.01;
+        const factor = (Math.sin(t) + 1) / 2; // 0 → 1 → 0
+        const blended = colorStart.clone().lerp(colorEnd, factor);
+        material.color = blended;
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      logoEl.addEventListener("mouseenter", () => { hover = true; });
+      logoEl.addEventListener("mouseleave", () => { hover = false; });
+    }
+  }
+
 });
