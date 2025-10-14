@@ -143,35 +143,54 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(updateDateTime, 1000);
   updateDateTime();
 
-  // --- Wetteranzeige ---
+  // --- Wetteranzeige mit Cache ---
   const weatherEl = document.getElementById("weather");
   const apiKey = "4e0b983a4bbe2545d6ed08b59967c6e3";
+  const cacheKey = "weatherCache";
+
+  function renderWeather(data) {
+    const temp = Math.round(data.main.temp);
+    const desc = data.weather[0].description;
+    const icon = data.weather[0].icon;
+    const city = data.name;
+    weatherEl.innerHTML =
+      `<img src="https://openweathermap.org/img/wn/${icon}.png" alt="" style="vertical-align:middle;width:22px;height:22px;"> ${city}: ${temp}°C, ${desc}`;
+  }
 
   function fetchWeather(lat, lon) {
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=de`;
+
     fetch(url)
-      .then(response => response.json())
+      .then(r => r.json())
       .then(data => {
         if (data.weather && data.main) {
-          const temp = Math.round(data.main.temp);
-          const desc = data.weather[0].description;
-          const icon = data.weather[0].icon;
-          const city = data.name;
-          weatherEl.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}.png" alt="" style="vertical-align:middle;width:22px;height:22px;"> ${city}: ${temp}°C, ${desc}`;
+          renderWeather(data);
+          // Cache speichern mit Zeitstempel
+          const cached = { time: Date.now(), data: data };
+          localStorage.setItem(cacheKey, JSON.stringify(cached));
         } else {
           weatherEl.textContent = "Wetterdaten nicht verfügbar";
         }
       })
-      .catch(() => {
-        weatherEl.textContent = "Keine Verbindung zur API";
-      });
+      .catch(() => weatherEl.textContent = "Keine Verbindung zur API");
+  }
+
+  function loadWeather(lat, lon) {
+    const cached = JSON.parse(localStorage.getItem(cacheKey));
+    const thirtyMinutes = 30 * 60 * 1000;
+
+    if (cached && (Date.now() - cached.time < thirtyMinutes)) {
+      renderWeather(cached.data);
+    } else {
+      fetchWeather(lat, lon);
+    }
   }
 
   // Standort ermitteln
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-      pos => fetchWeather(pos.coords.latitude, pos.coords.longitude),
-      () => { weatherEl.textContent = "Standortzugriff verweigert"; }
+      pos => loadWeather(pos.coords.latitude, pos.coords.longitude),
+      () => weatherEl.textContent = "Standortzugriff verweigert"
     );
   } else {
     weatherEl.textContent = "Geolocation nicht unterstützt";
