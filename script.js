@@ -118,6 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (id === "berechnungen") window.location.href = "/berechnungen/index.html";
       if (id === "subnetting") window.location.href = "/subnetz/subnetz.html";
       if (id === "handel") window.location.href = "/handelskalkulation/kalkulation.html";
+      if (id === "classbook") window.location.href = "/classbook/login_calendar.html";
+      if (id === "manage") window.location.href = "/classbook/manage_login.php";
     });
   });
 
