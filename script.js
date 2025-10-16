@@ -27,8 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
       color: 0x0008a,
       shininess: 30.0,
       waveHeight: 25.0,
-      waveSpeed: 0.1,
-      zoom: 1
+      waveSpeed: 0.3,
+      zoom: 0.5
     });
   }
 

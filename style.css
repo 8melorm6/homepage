@@ -51,24 +51,9 @@ body {
   z-index: 100;
 }
 
-.header-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  text-align: right;
-  gap: 0.3em;
-  font-size: 0.95em;
-  color: #b9c5d0;
-}
-
 #datetime {
   font-weight: 500;
   color: var(--accent2);
-}
-
-#weather {
-  font-size: 0.9em;
-  color: #a8b3be;
 }
 
 /* Logo mit Partikel-Glow */
@@ -115,8 +100,8 @@ body {
 
 /* Pulsierender Hologramm-Effekt */
 @keyframes holoPulse {
-  0%, 100% { opacity: 0.4; transform: scale(1.15); }
-  50% { opacity: 0.8; transform: scale(1.35); }
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.5); }
 }
 
 /* Buchstabenfarben */
@@ -161,8 +146,8 @@ body {
   text-align: center;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
   padding: 2em 3em;
   width: 260px;
   height: 180px;
@@ -199,23 +184,6 @@ body {
 .card.hint {
   animation: floating 1.5s ease-in-out infinite;
   box-shadow: 0 0 15px rgba(0, 201, 255, 0.5);
-}
-
-/* Pfeil-Icon unten rechts */
-.card::after {
-  content: "⇲";
-  position: absolute;
-  bottom: 8px;
-  right: 12px;
-  font-size: 1.4em;
-  color: rgba(146, 254, 157, 0.5);
-  opacity: 0.6;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.card:hover::after {
-  opacity: 1;
 }
 
 /* Hinweis-Box */
