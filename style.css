@@ -20,19 +20,32 @@ html, body {
   height: 100%;
 }
 
-main {
-  flex: 1; /* sorgt dafür, dass Footer unten bleibt */
-}
-
 body {
   font-family: "Segoe UI", Roboto, sans-serif;
-  background: linear-gradient(135deg, #1a1f2a, #0b0c10);
-  color: #b9c5d0;            /* neutral-graublau statt reinweiß */
+  color: #b9c5d0;
   min-height: 100vh;
   overflow-x: hidden;
   user-select: none;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(120deg, #0a0f3a, #041258, #0b0c10);
+  background-size: 400% 400%;
+  animation: gradientFlow 18s ease infinite;
+}
+
+/* Neuer sanft animierter Verlauf */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Hauptbereich */
+main {
+  flex: 1;
+  background: transparent; /* übernimmt die animierte body-Farbe */
+  padding-top: 8em;
+  padding-bottom: 4em;
 }
 
 /* Header */
@@ -63,13 +76,12 @@ body {
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: 2px;
-  color: #b6cfe0;                     /* Basisfarbe: weiches, neutralblau */
+  color: #b6cfe0;
   text-shadow: 0 0 10px rgba(0, 201, 255, 0.25);
   cursor: default;
   transition: transform 0.3s ease, text-shadow 0.3s ease;
 }
 
-/* Glow-Hintergrund (Hologramm-Effekt) */
 .logo::before {
   content: "";
   position: absolute;
@@ -98,7 +110,6 @@ body {
   animation: holoPulse 1.8s ease-in-out infinite;
 }
 
-/* Pulsierender Hologramm-Effekt */
 @keyframes holoPulse {
   0%, 100% { opacity: 0.1; transform: scale(1); }
   50% { opacity: 0.4; transform: scale(1.5); }
@@ -106,13 +117,13 @@ body {
 
 /* Buchstabenfarben */
 .logo .l {
-  color: #56b0ff;                     /* helles, freundliches Blau */
+  color: #56b0ff;
   text-shadow: 0 0 12px rgba(86,176,255,0.5);
   transition: text-shadow 0.3s ease;
 }
 
 .logo .r {
-  color: #77e3b2;                     /* dezentes Mintgrün */
+  color: #77e3b2;
   text-shadow: 0 0 12px rgba(119,227,178,0.5);
   transition: text-shadow 0.3s ease;
 }
@@ -132,17 +143,16 @@ body {
   align-items: center;
   flex-wrap: wrap;
   gap: 2em;
-  padding: 8em 2em 4em; /* Abstand nach Header */
 }
 
 .card {
   position: absolute;
   user-select: none;
-  touch-action: none; /* verhindert Scrollen beim Ziehen */
+  touch-action: none;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* vertikal zentriert */
-  align-items: center;     /* horizontal zentriert */
+  justify-content: center;
+  align-items: center;
   text-align: center;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -173,14 +183,13 @@ body {
   letter-spacing: 1px;
 }
 
-/* Visueller Hinweis: schwebende Bewegung + kleine Pfeile */
+/* Hinweisanimation */
 @keyframes floating {
   0%   { transform: translateY(0px); }
   50%  { transform: translateY(-5px); }
   100% { transform: translateY(0px); }
 }
 
-/* kleine Hinweis-Animation beim ersten Laden */
 .card.hint {
   animation: floating 1.5s ease-in-out infinite;
   box-shadow: 0 0 15px rgba(0, 201, 255, 0.5);
@@ -211,20 +220,6 @@ body {
   opacity: 1;
 }
 
-/* Leichte Wackelbewegung der Cards */
-@keyframes wiggle {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(1.5deg); }
-  50% { transform: rotate(0deg); }
-  75% { transform: rotate(-1.5deg); }
-  100% { transform: rotate(0deg); }
-}
-
-.card.hint {
-  animation: wiggle 0.8s ease-in-out infinite;
-  box-shadow: 0 0 20px rgba(0, 201, 255, 0.5);
-}
-
 /* Footer */
 footer {
   text-align: center;
@@ -240,6 +235,16 @@ footer {
   z-index: 10;
 }
 
+footer a {
+  color: #77e3b2;           /* Grundfarbe für beide Links */
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: #56b0ff;           /* Farbe beim Hover */
+  text-decoration: underline;
+}
+
 footer p {
   margin: 0;
   opacity: 0.85;
@@ -248,12 +253,6 @@ footer p {
 
 footer p:hover {
   opacity: 1;
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Responsiv */
