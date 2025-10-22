@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Drag & Drop + Positionsspeicherung (Desktop + Touch) ---
   const cards = document.querySelectorAll(".card");
   const screenWidth = window.innerWidth;
+  // Definiert den Breakpoint: Mobilgeräte sind Bildschirme bis 768px
+  const isMobile = screenWidth <= 768; 
   const spacing = screenWidth / (cards.length + 1);
   const startY = 250;
 
@@ -42,76 +44,88 @@ document.addEventListener("DOMContentLoaded", () => {
     const id = card.dataset.id;
     const saved = JSON.parse(localStorage.getItem(`card-pos-${id}`));
 
-    // Wenn keine Position gespeichert, Karten nebeneinander verteilen
-    if (saved) {
-      card.style.left = saved.x + "px";
-      card.style.top = saved.y + "px";
+    // --- POSITIONIERUNG ---
+    // Absolute Positionierung nur auf Desktop anwenden
+    if (!isMobile) {
+      if (saved) {
+        card.style.left = saved.x + "px";
+        card.style.top = saved.y + "px";
+      } else {
+        // Anfangspositionen für Desktop (nebeneinander)
+        card.style.left = spacing * (index + 1) - card.offsetWidth / 2 + "px";
+        card.style.top = startY + "px";
+      }
     } else {
-      card.style.left = spacing * (index + 1) - card.offsetWidth / 2 + "px";
-      card.style.top = startY + "px";
+      // Auf Mobilgeräten gespeicherte Position löschen, damit die Karten gestapelt werden
+      localStorage.removeItem(`card-pos-${id}`);
     }
 
     let offsetX, offsetY, moved = false;
 
-    const startDrag = (clientX, clientY) => {
-      offsetX = clientX - card.offsetLeft;
-      offsetY = clientY - card.offsetTop;
-      card.classList.add("dragging");
-      moved = false;
-    };
-
-    const moveDrag = (clientX, clientY) => {
-      moved = true;
-      const x = Math.max(0, Math.min(window.innerWidth - card.offsetWidth, clientX - offsetX));
-      const y = Math.max(0, Math.min(window.innerHeight - card.offsetHeight, clientY - offsetY));
-      card.style.left = x + "px";
-      card.style.top = y + "px";
-    };
-
-    const endDrag = () => {
-      card.classList.remove("dragging");
-      localStorage.setItem(`card-pos-${id}`, JSON.stringify({
-        x: card.offsetLeft,
-        y: card.offsetTop
-      }));
-      if (moved) {
-        card.dataset.blockClick = "true";
-        setTimeout(() => delete card.dataset.blockClick, 100);
-      }
-    };
-
-    // --- Maussteuerung ---
-    card.addEventListener("mousedown", e => {
-      startDrag(e.clientX, e.clientY);
-
-      const onMove = ev => moveDrag(ev.clientX, ev.clientY);
-      const onUp = () => {
-        document.removeEventListener("mousemove", onMove);
-        document.removeEventListener("mouseup", onUp);
-        endDrag();
+    // --- DRAG-LOGIK (NUR FÜR DESKTOP/GROSSE BILDSCHIRME) ---
+    if (!isMobile) {
+      const startDrag = (clientX, clientY) => {
+        offsetX = clientX - card.offsetLeft;
+        offsetY = clientY - card.offsetTop;
+        card.classList.add("dragging");
+        moved = false;
       };
 
-      document.addEventListener("mousemove", onMove);
-      document.addEventListener("mouseup", onUp);
-    });
+      const moveDrag = (clientX, clientY) => {
+        moved = true;
+        const x = Math.max(0, Math.min(window.innerWidth - card.offsetWidth, clientX - offsetX));
+        const y = Math.max(0, Math.min(window.innerHeight - card.offsetHeight, clientY - offsetY));
+        card.style.left = x + "px";
+        card.style.top = y + "px";
+      };
 
-    // --- Touchsteuerung ---
-    card.addEventListener("touchstart", e => {
-      const touch = e.touches[0];
-      startDrag(touch.clientX, touch.clientY);
-    }, { passive: false });
+      const endDrag = () => {
+        card.classList.remove("dragging");
+        localStorage.setItem(`card-pos-${id}`, JSON.stringify({
+          x: card.offsetLeft,
+          y: card.offsetTop
+        }));
+        if (moved) {
+          card.dataset.blockClick = "true";
+          setTimeout(() => delete card.dataset.blockClick, 100);
+        }
+      };
 
-    card.addEventListener("touchmove", e => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      moveDrag(touch.clientX, touch.clientY);
-    }, { passive: false });
+      // --- Maussteuerung ---
+      card.addEventListener("mousedown", e => {
+        startDrag(e.clientX, e.clientY);
 
-    card.addEventListener("touchend", endDrag);
+        const onMove = ev => moveDrag(ev.clientX, ev.clientY);
+        const onUp = () => {
+          document.removeEventListener("mousemove", onMove);
+          document.removeEventListener("mouseup", onUp);
+          endDrag();
+        };
+
+        document.addEventListener("mousemove", onMove);
+        document.addEventListener("mouseup", onUp);
+      });
+
+      // --- Touchsteuerung ---
+      card.addEventListener("touchstart", e => {
+        const touch = e.touches[0];
+        // e.preventDefault() hier weglassen, um Scrollen zu erlauben, es wird in touchmove behandelt
+        startDrag(touch.clientX, touch.clientY);
+      }, { passive: false });
+
+      card.addEventListener("touchmove", e => {
+        e.preventDefault(); // Hier preventDefault, um das Ziehen zu ermöglichen und das Standard-Scrollen zu verhindern
+        const touch = e.touches[0];
+        moveDrag(touch.clientX, touch.clientY);
+      }, { passive: false });
+
+      card.addEventListener("touchend", endDrag);
+    } // Ende Drag-Logik
 
     // --- Klickverhalten ---
     card.addEventListener("click", (e) => {
-      if (card.dataset.blockClick === "true") {
+      // Klick blockieren nur, wenn Drag & Drop aktiv ist und es eine Bewegung gab
+      if (!isMobile && card.dataset.blockClick === "true") {
         e.preventDefault();
         return;
       }
@@ -127,12 +141,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const hintBox = document.getElementById("drag-hint");
 
   if (hintBox) {
-    hintBox.classList.add("visible");
-    cards.forEach(card => card.classList.add("hint"));
-    setTimeout(() => {
-      hintBox.classList.remove("visible");
-      cards.forEach(card => card.classList.remove("hint"));
-    }, 6000);
+    // Hinweis und Animation nur auf Desktop/großen Bildschirmen anzeigen
+    if (!isMobile) {
+      hintBox.classList.add("visible");
+      cards.forEach(card => card.classList.add("hint"));
+      setTimeout(() => {
+        hintBox.classList.remove("visible");
+        cards.forEach(card => card.classList.remove("hint"));
+      }, 6000);
+    } else {
+      // Auf Mobilgeräten den Hinweis ausblenden (optional: Element entfernen)
+      hintBox.style.display = 'none';
+    }
   }
 
   // --- Datum und Uhrzeit ---

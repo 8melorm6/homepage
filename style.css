@@ -64,6 +64,12 @@ main {
   z-index: 100;
 }
 
+.header-info {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+}
+
 #datetime {
   font-weight: 500;
   color: var(--accent2);
@@ -137,16 +143,20 @@ main {
 }
 
 /* Cards */
+/* Wichtig: card-container ist ein Flex-Container, der Wrap zulässt, 
+   was für das responsive Stapeln genutzt wird. */
 .card-container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   gap: 2em;
+  /* Auf Desktop ist dies irrelevant, da die Karten absolut positioniert sind.
+     Auf Mobile wird es wirksam, wenn position: static angewendet wird. */
 }
 
 .card {
-  position: absolute;
+  position: absolute; /* Muss hier für Desktop auf absolute bleiben */
   user-select: none;
   touch-action: none;
   display: flex;
@@ -255,9 +265,66 @@ footer p:hover {
   opacity: 1;
 }
 
-/* Responsiv */
+/* --- RESPONSIVE ANPASSUNGEN (MOBILE-FIX) --- */
 @media (max-width: 768px) {
   .header {
+    padding: 1em 1.5em;
     flex-direction: column;
+    gap: 0.5em;
+    position: relative; /* Header nicht fixieren, um Scroll-Platz zu schaffen */
+  }
+
+  /* Header nach unten schieben, damit Platz für das nun nicht-fixierte Header ist */
+  main {
+      padding-top: 2em; 
+  }
+  
+  .header-info {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Die kritische Änderung: Karten vom absoluten Layout befreien */
+  .card {
+    position: static !important; /* !!! Wichtig: Setzt die Position auf den normalen Fluss zurück */
+    left: auto !important;
+    top: auto !important;
+    width: 90%; /* Breite anpassen, um fast den gesamten Bildschirm einzunehmen */
+    max-width: 350px;
+    margin: 0 auto; /* Zentrieren */
+    height: auto;
+    padding: 1.5em 2em;
+    cursor: pointer; /* Cursor zurücksetzen */
+    transform: none !important; /* Alle möglichen JS- oder Hover-Transformationen zurücksetzen */
+  }
+  
+  /* Container, der nun die Karten zentriert und stapelt */
+  .card-container {
+      padding: 0 1em;
+      gap: 1.5em;
+      /* Da .card nun static ist, werden die Karten in der Flexbox (card-container)
+         gestapelt und zentriert (justify-content: center; flex-wrap: wrap;). */
+  }
+  
+  /* Hover und Animation auf Mobilgeräten deaktivieren */
+  .card:hover {
+    transform: none; 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .card.hint {
+    animation: none;
+    box-shadow: 0 0 10px rgba(0, 201, 255, 0.4);
+  }
+  
+  /* Drag-Hint auf Mobile ausblenden (wird auch im JS gemacht) */
+  .drag-hint {
+    display: none;
+  }
+  
+  /* Footer anpassen */
+  footer {
+    padding: 1em;
+    font-size: 0.8em;
   }
 }
